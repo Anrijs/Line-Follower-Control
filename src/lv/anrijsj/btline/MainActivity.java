@@ -30,7 +30,8 @@ public class MainActivity extends Activity
 	String deviceMac1 = "20:13:08:08:21:71"; // ALL CAPS!
 	String deviceName1 = "HC-06"; // real name not given
 	static int threadDelay = 200; // min msec between sending data
-	static boolean activeMode = false; 
+	static boolean activeMode = false; // if true, will send while slider is pressed
+	                                   // if false, will send when released
 
     TextView statusLabel, param1Label, param2Label, param3Label, param4Label;
     TextView param1Value, param2Value, param3Value, param4Value;
@@ -51,6 +52,7 @@ public class MainActivity extends Activity
     int counter;
     boolean connected = false;
     boolean valuesChanged = false;
+    boolean readValue = false;
     volatile boolean stopWorker;
     
     @Override
@@ -80,6 +82,8 @@ public class MainActivity extends Activity
         param2SeekBar = (SeekBar)findViewById(R.id.seekBar2);
         param3SeekBar = (SeekBar)findViewById(R.id.seekBar3);
         param4SeekBar = (SeekBar)findViewById(R.id.seekBar4);
+        
+        
 
         //Open Button
         connectButton.setOnClickListener(new View.OnClickListener()
@@ -310,13 +314,14 @@ public class MainActivity extends Activity
         connectButton.setVisibility(11);
         
         connected = true;
+        beginListenForData();
     }
     
     void beginListenForData()
     {
         final Handler handler = new Handler(); 
-        final byte delimiter = 10; //This is the ASCII code for a newline character
-        
+        final byte delimiter = 10 ; //This is the ASCII code for a newline character
+        final byte delimiter_alt = 13 ;
         stopWorker = false;
         readBufferPosition = 0;
         readBuffer = new byte[1024];
@@ -336,9 +341,9 @@ public class MainActivity extends Activity
                             for(int i=0;i<bytesAvailable;i++)
                             {
                                 byte b = packetBytes[i];
-                                if(b == delimiter)
+                                if((b == delimiter_alt || b == delimiter) && readBufferPosition>3)
                                 {
-                                    byte[] encodedBytes = new byte[readBufferPosition];
+                                    final byte[] encodedBytes = new byte[readBufferPosition];
                                     System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
                                     final String data = new String(encodedBytes, "US-ASCII");
                                     readBufferPosition = 0;
@@ -347,7 +352,13 @@ public class MainActivity extends Activity
                                     {
                                         public void run()
                                         {
-                                            statusLabel.setText(data);
+                                        	int length = data.length();
+                                        	if(length>3) {
+                                                param1SeekBar.setProgress(encodedBytes[length-4]);
+                                                param2SeekBar.setProgress(encodedBytes[length-3]);
+                                                param3SeekBar.setProgress(encodedBytes[length-2]);
+                                                param4SeekBar.setProgress(encodedBytes[length-1]);
+                                        	}
                                         }
                                     });
                                 }
@@ -368,7 +379,7 @@ public class MainActivity extends Activity
 
         workerThread.start();
     }
-        
+            
     void sendBytes(byte[] b)
     {
     	try {
