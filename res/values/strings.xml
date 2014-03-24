@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BT Line</string>
+    <string name="action_settings">Settings</string>
+    <string name="param1">Parameter 1</string>
+    <string name="param2">Parameter 2</string>
+    <string name="btnLeft">Connect</string>
+    <string name="btnRight">Write</string>
+    <string name="status">Status:\s</string>
+    <string name="notConnected">Not Connected</string>
+
+</resources>
