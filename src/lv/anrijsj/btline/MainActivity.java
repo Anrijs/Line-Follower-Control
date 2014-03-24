@@ -29,14 +29,15 @@ public class MainActivity extends Activity
 	//String deviceMac1 = "FF:FF:FF:FF:FF:FF"; // Disable MAC
 	String deviceMac1 = "20:13:08:08:21:71"; // ALL CAPS!
 	String deviceName1 = "HC-06"; // real name not given
-	int threadDelay = 200; // min msec between sending data
+	static int threadDelay = 200; // min msec between sending data
+	static boolean activeMode = false; 
 
     TextView statusLabel, param1Label, param2Label, param3Label, param4Label;
     TextView param1Value, param2Value, param3Value, param4Value;
     SeekBar param1SeekBar, param2SeekBar, param3SeekBar, param4SeekBar;
     
     Button connectButton, startButton, stopButton, writeButton, readButton;
-    
+ 
     Handler mHandler = new Handler();
     
     BluetoothAdapter mBluetoothAdapter;
@@ -140,15 +141,19 @@ public class MainActivity extends Activity
         	        int progress = 0;
         	        @Override
         	        public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
-        	          param1Value.setText(""+progresValue);
-        	          valuesChanged = true;
+        	            param1Value.setText(""+progresValue);
+        	            if(activeMode) {
+        	        	    valuesChanged = true;
+        	            }
         	        }
 
         	        @Override
         	        public void onStartTrackingTouch(SeekBar seekBar) {}
 
         	        @Override
-        	        public void onStopTrackingTouch(SeekBar seekBar) {}
+        	        public void onStopTrackingTouch(SeekBar seekBar) {
+        	        	valuesChanged = true;
+        	        }
         	});
 
         param2SeekBar.setOnSeekBarChangeListener(
@@ -156,31 +161,39 @@ public class MainActivity extends Activity
         	        int progress = 0;
         	        @Override
         	        public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
-        	          param2Value.setText(""+progresValue);
-        	          valuesChanged = true;
+        	            param2Value.setText(""+progresValue);
+        	            if(activeMode) {
+    	        	        valuesChanged = true;
+    	                }
         	        }
 
         	        @Override
         	        public void onStartTrackingTouch(SeekBar seekBar) {}
 
         	        @Override
-        	        public void onStopTrackingTouch(SeekBar seekBar) {}
+        	        public void onStopTrackingTouch(SeekBar seekBar) {
+        	        	valuesChanged = true;
+        	        }
         	});
         
         param3SeekBar.setOnSeekBarChangeListener(
         	    new OnSeekBarChangeListener() {
         	        int progress = 0;
         	        @Override
-        	        public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
-        	          param3Value.setText(""+progresValue);
-        	          valuesChanged = true;
+        	        public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) { 	      
+        	            param3Value.setText(""+progresValue);
+        	            if(activeMode) {
+    	        	        valuesChanged = true;
+    	                }
         	        }
 
         	        @Override
         	        public void onStartTrackingTouch(SeekBar seekBar) {}
 
         	        @Override
-        	        public void onStopTrackingTouch(SeekBar seekBar) {}
+        	        public void onStopTrackingTouch(SeekBar seekBar) {
+        	        	valuesChanged = true;
+        	        }
         	});
         
         param4SeekBar.setOnSeekBarChangeListener(
@@ -188,15 +201,19 @@ public class MainActivity extends Activity
         	        int progress = 0;
         	        @Override
         	        public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
-        	          param4Value.setText(""+progresValue);
-        	          valuesChanged = true;
+        	            param4Value.setText(""+progresValue);
+        	            if(activeMode) {
+  	        	            valuesChanged = true;
+  	                    }
         	        }
 
         	        @Override
         	        public void onStartTrackingTouch(SeekBar seekBar) {}
 
         	        @Override
-        	        public void onStopTrackingTouch(SeekBar seekBar) {}
+        	        public void onStopTrackingTouch(SeekBar seekBar) {
+        	        	valuesChanged = true;
+        	        }
         	});
         
         /*** Thread for automatic value sending ***/
