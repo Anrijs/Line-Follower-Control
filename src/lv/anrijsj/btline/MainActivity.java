@@ -1,6 +1,5 @@
 package lv.anrijsj.btline;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,17 +19,24 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity
 {
 	//String deviceMac1 = "FF:FF:FF:FF:FF:FF"; // Disable MAC
-	String deviceMac1 = "00:1C:88:12:FA:83"; // ALL CAPS!
-	String deviceName1 = "Qstarz GPS"; // ALL CAPS!
+	String deviceMac1 = "20:13:08:08:21:71"; // ALL CAPS!
+	String deviceName1 = "HC-06"; // real name not given
 
-    TextView myLabel;
-    EditText myTextbox;
+    TextView statusLabel, param1Label, param2Label, param3Label, param4Label;
+    TextView param1Value, param2Value, param3Value, param4Value;
+    SeekBar param1SeekBar, param2SeekBar, param3SeekBar, param4SeekBar;
+    
+    Button connectButton, startButton, stopButton, writeButton, readButton;
+    
+    
     BluetoothAdapter mBluetoothAdapter;
     BluetoothSocket mmSocket;
     BluetoothDevice mmDevice;
@@ -48,13 +54,30 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        Button openButton = (Button)findViewById(R.id.buttonLeft);
-        Button sendButton = (Button)findViewById(R.id.buttonRight);
-        myLabel = (TextView)findViewById(R.id.statusText);
-        myTextbox = (EditText)findViewById(R.id.editParam1);
+        connectButton = (Button)findViewById(R.id.button5);
+        writeButton = (Button)findViewById(R.id.button1);
+        readButton = (Button)findViewById(R.id.button2);
+        startButton = (Button)findViewById(R.id.button3);
+        stopButton = (Button)findViewById(R.id.button4);
+   
+        param1Label = (TextView)findViewById(R.id.param1name);
+        param2Label = (TextView)findViewById(R.id.param2name);
+        param3Label = (TextView)findViewById(R.id.param3name);
+        param4Label = (TextView)findViewById(R.id.param4name);
+        statusLabel = (TextView)findViewById(R.id.statusText);
         
+        param1Value = (TextView)findViewById(R.id.param1Value);
+        param2Value = (TextView)findViewById(R.id.param2Value);
+        param3Value = (TextView)findViewById(R.id.param3Value);
+        param4Value = (TextView)findViewById(R.id.param4Value);
+        
+        param1SeekBar = (SeekBar)findViewById(R.id.seekBar1);
+        param2SeekBar = (SeekBar)findViewById(R.id.seekBar2);
+        param3SeekBar = (SeekBar)findViewById(R.id.seekBar3);
+        param4SeekBar = (SeekBar)findViewById(R.id.seekBar4);
+
         //Open Button
-        openButton.setOnClickListener(new View.OnClickListener()
+        connectButton.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
             {
@@ -70,20 +93,66 @@ public class MainActivity extends Activity
             }
         });
         
-        //Send Button
-        sendButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                try 
-                {
-                    sendData();
-                }
-                catch (IOException ex) { }
-            }
-        });
-        
+        /*** SeekBar Listeners ***/
+        param1SeekBar.setOnSeekBarChangeListener(
+        	    new OnSeekBarChangeListener() {
+        	        int progress = 0;
+        	        @Override
+        	        public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
+        	          param1Value.setText(""+progresValue);
+        	        }
 
+        	        @Override
+        	        public void onStartTrackingTouch(SeekBar seekBar) {}
+
+        	        @Override
+        	        public void onStopTrackingTouch(SeekBar seekBar) {}
+        	});
+
+        param2SeekBar.setOnSeekBarChangeListener(
+        	    new OnSeekBarChangeListener() {
+        	        int progress = 0;
+        	        @Override
+        	        public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
+        	          param2Value.setText(""+progresValue);
+        	        }
+
+        	        @Override
+        	        public void onStartTrackingTouch(SeekBar seekBar) {}
+
+        	        @Override
+        	        public void onStopTrackingTouch(SeekBar seekBar) {}
+        	});
+        
+        param3SeekBar.setOnSeekBarChangeListener(
+        	    new OnSeekBarChangeListener() {
+        	        int progress = 0;
+        	        @Override
+        	        public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
+        	          param3Value.setText(""+progresValue);
+        	        }
+
+        	        @Override
+        	        public void onStartTrackingTouch(SeekBar seekBar) {}
+
+        	        @Override
+        	        public void onStopTrackingTouch(SeekBar seekBar) {}
+        	});
+        
+        param4SeekBar.setOnSeekBarChangeListener(
+        	    new OnSeekBarChangeListener() {
+        	        int progress = 0;
+        	        @Override
+        	        public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
+        	          param4Value.setText(""+progresValue);
+        	        }
+
+        	        @Override
+        	        public void onStartTrackingTouch(SeekBar seekBar) {}
+
+        	        @Override
+        	        public void onStopTrackingTouch(SeekBar seekBar) {}
+        	});
     }
     
     boolean findBT()
@@ -91,7 +160,7 @@ public class MainActivity extends Activity
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if(mBluetoothAdapter == null)
         {
-            myLabel.setText("No bluetooth adapter available");
+            statusLabel.setText("No bluetooth adapter available");
         }
         
         if(!mBluetoothAdapter.isEnabled())
@@ -116,25 +185,33 @@ public class MainActivity extends Activity
                 }
             }
         }
-        myLabel.setText("Bluetooth Device Found");
+        statusLabel.setText("Bluetooth Device Found");
         return false;
     }
     
     void openBT() throws IOException
     {
-    	Log.d(">> debug <<", "Opening BT ");
+    	
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); //Standard SerialPortService ID
-        
         mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
-    	Log.d(">> debug <<", "Connecting BT ");
         mmSocket.connect();
-    	Log.d(">> debug <<", "Setting stream ");
         mmOutputStream = mmSocket.getOutputStream();
         mmInputStream = mmSocket.getInputStream();
         
         beginListenForData();
         
-        myLabel.setText("Bluetooth Opened");
+        param1Label.setEnabled(true);
+        param2Label.setEnabled(true);
+        param3Label.setEnabled(true);
+        param4Label.setEnabled(true);
+        
+        param1SeekBar.setEnabled(true);
+        param2SeekBar.setEnabled(true);
+        param3SeekBar.setEnabled(true);
+        param4SeekBar.setEnabled(true);
+        
+        statusLabel.setText("Connected");
+        connectButton.setVisibility(11);
     }
     
     void beginListenForData()
@@ -172,7 +249,7 @@ public class MainActivity extends Activity
                                     {
                                         public void run()
                                         {
-                                            myLabel.setText(data);
+                                            statusLabel.setText(data);
                                         }
                                     });
                                 }
@@ -193,13 +270,11 @@ public class MainActivity extends Activity
 
         workerThread.start();
     }
-    
-    void sendData() throws IOException
+        
+    void sendBytes(byte[] b) throws IOException
     {
-        String msg = myTextbox.getText().toString();
-        msg += "\n";
-        mmOutputStream.write(msg.getBytes());
-        myLabel.setText("Data Sent");
+        mmOutputStream.write(b);
+        statusLabel.setText("Data Sent");
     }
     
     void closeBT() throws IOException
@@ -208,6 +283,6 @@ public class MainActivity extends Activity
         mmOutputStream.close();
         mmInputStream.close();
         mmSocket.close();
-        myLabel.setText("Bluetooth Closed");
+        statusLabel.setText("Bluetooth Closed");
     }
 }

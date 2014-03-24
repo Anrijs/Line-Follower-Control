@@ -24,15 +24,26 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080008;
-        public static final int buttonLeft=0x7f080004;
-        public static final int buttonRight=0x7f080005;
-        public static final int editParam1=0x7f080001;
-        public static final int editParam2=0x7f080003;
-        public static final int statusText=0x7f080007;
-        public static final int textView1=0x7f080000;
-        public static final int textView2=0x7f080002;
-        public static final int textView3=0x7f080006;
+        public static final int action_settings=0x7f080013;
+        public static final int button1=0x7f08000e;
+        public static final int button2=0x7f08000f;
+        public static final int button3=0x7f080010;
+        public static final int button4=0x7f080011;
+        public static final int button5=0x7f080012;
+        public static final int param1Value=0x7f080003;
+        public static final int param1name=0x7f080002;
+        public static final int param2Value=0x7f080006;
+        public static final int param2name=0x7f080005;
+        public static final int param3Value=0x7f080009;
+        public static final int param3name=0x7f080008;
+        public static final int param4Value=0x7f08000c;
+        public static final int param4name=0x7f08000b;
+        public static final int seekBar1=0x7f080004;
+        public static final int seekBar2=0x7f080007;
+        public static final int seekBar3=0x7f08000a;
+        public static final int seekBar4=0x7f08000d;
+        public static final int statusText=0x7f080001;
+        public static final int textView3=0x7f080000;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -43,12 +54,17 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f050001;
         public static final int app_name=0x7f050000;
-        public static final int btnLeft=0x7f050004;
-        public static final int btnRight=0x7f050005;
-        public static final int notConnected=0x7f050007;
+        public static final int btn1=0x7f050006;
+        public static final int btn2=0x7f050007;
+        public static final int btn3=0x7f050008;
+        public static final int btn4=0x7f050009;
+        public static final int btn5=0x7f05000a;
+        public static final int notConnected=0x7f05000c;
         public static final int param1=0x7f050002;
         public static final int param2=0x7f050003;
-        public static final int status=0x7f050006;
+        public static final int param3=0x7f050004;
+        public static final int param4=0x7f050005;
+        public static final int status=0x7f05000b;
     }
     public static final class style {
         /** 

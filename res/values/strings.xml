@@ -3,11 +3,17 @@
 
     <string name="app_name">BT Line</string>
     <string name="action_settings">Settings</string>
-    <string name="param1">Parameter 1</string>
-    <string name="param2">Parameter 2</string>
-    <string name="btnLeft">Connect</string>
-    <string name="btnRight">Write</string>
-    <string name="status">Status:\s</string>
+    <string name="param1">Parameter 1:</string>
+    <string name="param2">Parameter 2:</string>
+    <string name="param3">Parameter 3:</string>
+    <string name="param4">Parameter 4:</string>
+    <string name="btn1">Read</string>
+    <string name="btn2">Write</string>
+    <string name="btn3">Stop</string>
+    <string name="btn4">Start</string>
+    <string name="btn5">Connect</string>
+    <string name="status">Status:</string>
     <string name="notConnected">Not Connected</string>
+    
 
 </resources>
