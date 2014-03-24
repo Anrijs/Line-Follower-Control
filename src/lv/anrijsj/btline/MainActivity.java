@@ -46,6 +46,7 @@ public class MainActivity extends Activity
     byte[] readBuffer;
     int readBufferPosition;
     int counter;
+    boolean connected = false;
     volatile boolean stopWorker;
     
     @Override
@@ -55,10 +56,10 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
         
         connectButton = (Button)findViewById(R.id.button5);
-        writeButton = (Button)findViewById(R.id.button1);
-        readButton = (Button)findViewById(R.id.button2);
-        startButton = (Button)findViewById(R.id.button3);
-        stopButton = (Button)findViewById(R.id.button4);
+        writeButton = (Button)findViewById(R.id.button2);
+        readButton = (Button)findViewById(R.id.button1);
+        startButton = (Button)findViewById(R.id.button4);
+        stopButton = (Button)findViewById(R.id.button3);
    
         param1Label = (TextView)findViewById(R.id.param1name);
         param2Label = (TextView)findViewById(R.id.param2name);
@@ -92,6 +93,43 @@ public class MainActivity extends Activity
                 }
             }
         });
+        
+        readButton.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+            	byte[] bytes = {0x72};
+            	sendBytes(bytes);
+            }
+        });
+        
+        writeButton.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+            	byte[] bytes = {0x77};
+            	sendBytes(bytes);
+            }
+        });
+        
+        stopButton.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+            	byte[] bytes = {0x73};
+            	sendBytes(bytes);
+            }
+        });
+        
+        startButton.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+            	byte[] bytes = {0x67};
+            	sendBytes(bytes);
+            }
+        });
+        
         
         /*** SeekBar Listeners ***/
         param1SeekBar.setOnSeekBarChangeListener(
@@ -210,8 +248,15 @@ public class MainActivity extends Activity
         param3SeekBar.setEnabled(true);
         param4SeekBar.setEnabled(true);
         
+        readButton.setEnabled(true);
+        writeButton.setEnabled(true);
+        startButton.setEnabled(true);
+        stopButton.setEnabled(true);
+        
         statusLabel.setText("Connected");
         connectButton.setVisibility(11);
+        
+        connected = true;
     }
     
     void beginListenForData()
@@ -271,10 +316,15 @@ public class MainActivity extends Activity
         workerThread.start();
     }
         
-    void sendBytes(byte[] b) throws IOException
+    void sendBytes(byte[] b)
     {
-        mmOutputStream.write(b);
-        statusLabel.setText("Data Sent");
+    	try {
+            mmOutputStream.write(b);
+            statusLabel.setText("Data Sent");
+    	}
+    	catch (IOException e) {
+			e.printStackTrace();
+		}
     }
     
     void closeBT() throws IOException
